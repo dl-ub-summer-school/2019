@@ -36,6 +36,7 @@ class SeqAttention(nn.Module):
         self.dropout = nn.Dropout(dropout)
         self.hidden_size = hidden_size # size of a single head
         self.attn_span = attn_span
+        self.adapt_span_enabled = False
 
     def forward(self, query, key, value, key_pe):
         # query size = B x M x H
