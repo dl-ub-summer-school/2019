@@ -52,20 +52,21 @@ class SeqAttention(nn.Module):
 
         # TODO 1
         # Scale attention scores with square root of d_k. HINT: Result dimention # B x M X L_pos
-        attn = ?
+        attn = attn / math.sqrt(self.hidden_size)
 
         # TODO 2
         # Compute softmax on attentions scores
-        attn = ?
+        attn = F.softmax(attn, dim=-1)
 
         # TODO 3
         # For regularization purpose, use dropout on attention scores. HINT: result dimention B x M X L_pos
-        attn = ?
+        attn = self.dropout(attn)
+        
         attn_cont = _skew(attn, 0)  # B x M X (L+M)
 
         # TODO 4
         # Compute attention output using attention scores and value vectors. HINT: result dimention B x M x H
-        out  = ?
+        out = torch.matmul(attn_cont, value)
 
         return out
 
@@ -126,15 +127,15 @@ class FeedForwardLayer(nn.Module):
         # TODO 5
         # Using self.fc1 to linearly tranform attention output, h.
         # Use activation function RELU
-        h1 =
+        h1 = F.relu(self.fc1(h))
 
         # TODO 6
         # For regularization purpose, add dropout to h1 above.
-        h1 =
-
+        h1 = self.dropout(h1)
+                
         # TODO 7
         # Using self.fc2 to linearly tranform h1.
-        h2 =
+        h2 = self.fc2(h1)
 
         return h2
 
